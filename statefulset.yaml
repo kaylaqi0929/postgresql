@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres12
+  labels:
+    app: postgres12
+spec:
+  serviceName: postgres12
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres12
+  template:
+    metadata:
+      labels:
+        app: postgres12
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:12
+        envFrom:
+        - configMapRef:
+            name: postgres12-config
+        - secretRef:
+            name: postgres12-secrets
+        ports:
+        - name: postgres
+          containerPort: 5432
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
