@@ -29,6 +29,19 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            cpu: 100m
+            memory: 500Mi
+          limits:
+            cpu: 300m
+            memory: 700Mi
+        livenessProbe:
+          exec:
+            command: ["pg_isready", "-U", "postgres", "-h", "localhost"]
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "postgres", "-h", "localhost"]
 
   volumeClaimTemplates:
     - metadata:
