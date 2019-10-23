@@ -1,0 +1,53 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-postgres
+  labels:
+    app: backup-postgres
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 2
+  jobTemplate:
+    metadata:
+      labels:
+        app: backup-postgres
+    spec:
+      template:
+        metadata:
+          labels:
+            app: backup-postgres
+        spec:
+          restartPolicy: Never
+          securityContext:
+            fsGroup: 1000
+          containers:
+          - name: backup-postgres
+            image: lordran/backup-sgbd
+            args: [ "lordran-backups-sgbd", "-t", "pgsql" ]
+            envFrom:
+            - secretRef:
+                name: backup-postgres-config
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
+              capabilities:
+                drop:
+                  - ALL
+            resources:
+              requests:
+                cpu: 50m
+                memory: 200Mi
+              limits:
+                cpu: 500m
+                memory: 400Mi
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir: {}
