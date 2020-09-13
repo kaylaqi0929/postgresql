@@ -24,7 +24,7 @@ spec:
             fsGroup: 1000
           containers:
           - name: backup-postgres
-            image: lordran/backup-sgbd
+            image: lordran/backup-sgbd:latest
             args: [ "lordran-backups-sgbd", "-t", "pgsql" ]
             envFrom:
             - secretRef:

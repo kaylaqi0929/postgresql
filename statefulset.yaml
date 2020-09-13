@@ -18,6 +18,9 @@ spec:
       containers:
       - name: postgres
         image: postgres:12
+        imagePullPolicy: Always
+        securityContext:
+          readOnlyRootFilesystem: true
         envFrom:
         - configMapRef:
             name: postgres12-config
@@ -29,6 +32,8 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/postgresql/data
+        - name: run
+          mountPath: /var/run
         resources:
           requests:
             cpu: 100m
@@ -42,6 +47,9 @@ spec:
         readinessProbe:
           exec:
             command: ["pg_isready", "-U", "postgres", "-h", "localhost"]
+      volumes:
+      - name: run
+        emptyDir: {}
 
   volumeClaimTemplates:
     - metadata:
