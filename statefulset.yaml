@@ -36,11 +36,8 @@ spec:
           mountPath: /var/run
         resources:
           requests:
-            cpu: 100m
+            cpu: 200m
             memory: 500Mi
-          limits:
-            cpu: 300m
-            memory: 700Mi
         livenessProbe:
           exec:
             command: ["pg_isready", "-U", "postgres", "-h", "localhost"]
