@@ -5,10 +5,10 @@ resources:
 - statefulset.yaml
 - cronjob.yaml
 secretGenerator:
-- name: postgres12-secrets
+- name: postgres14-secrets
   env: secrets.env
 - name: backup-postgres-config
   env: backup-postgres.env
 configMapGenerator:
-- name: postgres12-config
+- name: postgres14-config
   env: postgres.env
