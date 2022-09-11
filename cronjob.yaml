@@ -25,7 +25,7 @@ spec:
           containers:
           - name: backup-postgres
             image: lordran/backup-sgbd:latest
-            args: [ "lordran-backups-sgbd", "-t", "pgsql" ]
+            args: [ "lordran-backups-s3-sgbd", "-t", "pgsql", "-d" ]
             envFrom:
             - secretRef:
                 name: backup-postgres-config
